@@ -5,6 +5,7 @@
 .Ruserdata
 *.Rproj
 .gitignore
+venv/
 
 /data/*.csv
 /data/**
