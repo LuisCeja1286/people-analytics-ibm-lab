@@ -59,7 +59,7 @@ ggplot(turnover_dept, aes(x = reorder(Department, tasa_turnover), y = tasa_turno
   theme(legend.position = "bottom")
 
 #guardar grafico
-ggsave("outputs/graficos/turnover_dept_R.png", width = 8, height = 5, dpi = 300)
+ggsave("outputs/graficos/kpi1_turnover_R.png", width = 8, height = 5, dpi = 300)
 
 #Estadisticas globales
 Turnover_Global <- df %>%
