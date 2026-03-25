@@ -1,0 +1,13 @@
+Department,JobLevel,n_vacantes,avg_ttf,median_ttf,min_ttf,max_ttf,avg_costo
+Human Resources,1,10,25.5,24.5,11,38,4013
+Human Resources,3,2,59.5,59.5,55,64,9364
+Research & Development,1,101,25.36,26,10,40,3991
+Research & Development,2,15,35,36,21,49,5508
+Research & Development,3,13,50.77,51,38,64,7990
+Research & Development,4,1,60,60,60,60,9443
+Research & Development,5,3,95,98,85,102,14951
+Sales,1,32,23.34,25,10,40,3674
+Sales,2,37,33.27,33,20,50,5236
+Sales,3,17,51.24,51,35,65,8064
+Sales,4,4,71.5,70.5,61,84,11253
+Sales,5,2,98.5,98.5,96,101,15502

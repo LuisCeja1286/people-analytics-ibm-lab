@@ -2,6 +2,12 @@
 
 library(tidyverse)
 
+library(tidyverse)
+
+# Crear carpetas de output por KPI
+dir.create("outputs/tablas/01_kpi1_turnover", recursive = TRUE, showWarnings = FALSE)
+dir.create("outputs/graficos/01_kpi1_turnover", recursive = TRUE, showWarnings = FALSE)
+
 #Cargar datos
 df <- read_csv("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 
@@ -40,7 +46,7 @@ print(turnover_dept)
 
 #Exportar a CSV
 
-write_csv(turnover_dept,"outputs/tablas/turnover_dept_R.csv")
+write_csv(turnover_dept,"outputs/tablas/01_kpi1_turnover/turnover_dept_R.csv")
 
 #grafico de barras
 
@@ -59,7 +65,7 @@ ggplot(turnover_dept, aes(x = reorder(Department, tasa_turnover), y = tasa_turno
   theme(legend.position = "bottom")
 
 #guardar grafico
-ggsave("outputs/graficos/kpi1_turnover_R.png", width = 8, height = 5, dpi = 300)
+ggsave("outputs/graficos/01_kpi1_turnover/kpi1_turnover_R.png", width = 8, height = 5, dpi = 300)
 
 #Estadisticas globales
 Turnover_Global <- df %>%
@@ -73,4 +79,4 @@ Turnover_Global <- df %>%
 cat("\n📊 Turnover Global:\n")
 print(Turnover_Global)
 
-write_csv(Turnover_Global,"outputs/tablas/turnover_global_R.csv")
+write_csv(Turnover_Global,"outputs/tablas/01_kpi1_turnover/turnover_global_R.csv")

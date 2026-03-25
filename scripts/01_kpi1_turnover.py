@@ -94,13 +94,13 @@ axes[1].pie(tipo_count, labels=tipo_count.index, autopct='%1.1f%%', colors=color
 axes[1].set_title('Voluntario vs Involuntario (inferido)', fontsize=14)
 
 plt.tight_layout()
-plt.savefig('../outputs/graficos/kpi1_turnover_Py.png', dpi=300, bbox_inches='tight')
-print("\n✅ Gráfico guardado en outputs/graficos/kpi1_turnover_Py.png")
+plt.savefig('../outputs/graficos/01_kpi1_turnover/kpi1_turnover_Py.png', dpi=300, bbox_inches='tight')
+print("\n✅ Gráfico guardado en outputs/graficos/01_kpi1_turnover/kpi1_turnover_Py.png")
 
 #guardar tabla resumen
 
-turnover_dept.to_csv('../outputs/tablas/turnover_dept_Py.csv', index = False)
-print(f"✅  Tabla guardada en ../outputs/tablas/turnover_dept_Py.csv")
+turnover_dept.to_csv('../outputs/tablas/01_kpi1_turnover/turnover_dept_Py.csv', index = False)
+print(f"✅  Tabla guardada en ../outputs/tablas/01_kpi1_turnover/turnover_dept_Py.csv")
 
 global_stats = pd.DataFrame({
     'total_empleados': [total],
@@ -114,5 +114,5 @@ global_stats = pd.DataFrame({
 print("\n🌍 Turnover Global:")
 print(global_stats.to_string(index=False))
 
-global_stats.to_csv('../outputs/tablas/turnover_global_Py.csv', index = False)
-print(f"✅  Tabla guardada en ../outputs/tablas/turnover_global_Py.csv")
+global_stats.to_csv('../outputs/tablas/01_kpi1_turnover/turnover_global_Py.csv', index = False)
+print(f"✅  Tabla guardada en ../outputs/tablas/01_kpi1_turnover/turnover_global_Py.csv")
