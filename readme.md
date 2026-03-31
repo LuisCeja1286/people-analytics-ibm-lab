@@ -13,7 +13,19 @@ Este repositorio contiene un laboratorio completo de **People Analytics** utiliz
 - Visualización y storytelling con **Power BI**
 - Buenas prácticas de control de versiones con **Git/GitHub**
 
-Los resultados están pensados para ser consumidos por un dashboard en Power BI, que se encuentra en la carpeta `dashboard/` (cuando esté listo).
+## 📊 Dashboard Interactivo (MVP Producto Minimo Viable)
+
+He construido un dashboard en **Power BI** que integra los primeros 3 KPIs del laboratorio. El modelo de datos utiliza esquema estrella (`FactEmpleados`, `DimJobLevel`, `DimDepartment`) Tablas de hechos de KPI (`FactTTF`,`FactSurvival`)
+
+![Dashboard Overview](docs/images/dashboard_MVP.png)
+
+### 🧠 Detalle técnico del gráfico Kaplan‑Meier
+
+- **Datos**: Exportados desde R como tabla plana (`survival_by_dept_R.csv`) con columnas `Time_Years`, `Survival`, `CI_lower`, `CI_upper`, `Department`.
+- **Visual en Power BI**: Script R que usa `ggplot2` + `geom_step` + `geom_ribbon`
+- **Interactividad**: Responde a segmentaciones de departamento Ej. (`Human Resources` y `Sales`), manteniendo la asignación cromática consistente.
+
+![Kaplan-Meier](docs/images/Kaplan-Meier_R.png)
 
 ## 📊 KPIs Implementados
 

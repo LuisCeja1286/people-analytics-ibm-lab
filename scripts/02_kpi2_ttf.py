@@ -40,7 +40,7 @@ salidas['days_to_fill'] = salidas['days_to_fill'].clip(lower=1) #evita negativos
 #calcula el costo por vacante
 
 salidas['costo_vacante'] = salidas['days_to_fill'] * (salidas['MonthlyIncome'].mean() * 12/365)
-
+print(salidas)
 #Resumen por departamento y nivel
 
 ttf_resumen = (
