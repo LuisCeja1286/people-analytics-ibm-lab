@@ -103,7 +103,7 @@ for dept, kmf in kmf_dict.items():
     survival_curves.append(surv_df)
 
 df_suvival_curves = pd.concat(survival_curves, ignore_index=True)
-df_suvival_curves.to_csv("../outputs/tablas/survival_curves_py.csv", index = False)
+df_suvival_curves.to_csv("../outputs/tablas/03_kpi3_survival/survival_curves_Py.csv", index = False)
 print(f"Tabla de curvas exportada: {df_suvival_curves.shape[0]} filas")
 
 #LOG-RANK para comparar departamentos
