@@ -5,20 +5,23 @@
 ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
 ![BigQuery](https://img.shields.io/badge/BigQuery-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)
 ![Looker Studio](https://img.shields.io/badge/Looker%20Studio-4285F4?style=for-the-badge&logo=looker&logoColor=white)
+![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
 ## 📌 Descripción
 
-Laboratorio completo de **People Analytics** utilizando el dataset público IBM HR (1,470 empleados, 35 variables). El objetivo es demostrar un stack de análisis de datos de RRHH de nivel profesional, combinando dos ecosistemas:
+Laboratorio completo de **People Analytics** utilizando el dataset público IBM HR (1,470 empleados, 35 variables). El objetivo es demostrar un stack de análisis de datos de RRHH de nivel profesional, combinando **tres ecosistemas**:
 
-- **Ecosistema Microsoft**: R + Python → Power BI (KPIs 1–3)
-- **Ecosistema Google**: BigQuery SQL → Vistas → Looker Studio (KPI 4)
+- **Ecosistema Microsoft Local**: R + Python → Power BI Desktop (KPIs 1–3)
+- **Ecosistema Google Cloud**: BigQuery SQL → Vistas → Looker Studio (KPI 4)
+- **Ecosistema Microsoft Cloud**: Microsoft Fabric → OneLake → Power BI Service
 
 Habilidades demostradas:
 - Análisis estadístico con **R** (tidyverse, survival, survminer, regresión)
 - Transformación y análisis con **Python** (pandas, lifelines, scikit-learn, faker)
-- Modelado dimensional (esquema estrella + Constellation Schema con Conformed Dimensions)
+- Modelado dimensional (Constellation Schema con Conformed Dimensions)
 - SQL avanzado en **BigQuery** (CTEs, window functions, APPROX_QUANTILES, vistas semánticas)
+- Ingesta y ETL en la nube con **Microsoft Fabric** (Lakehouse, Dataflow Gen2, Delta Lake)
 - Visualización y storytelling en **Power BI** y **Looker Studio**
 - Control de versiones con **Git/GitHub**
 
@@ -26,7 +29,7 @@ Habilidades demostradas:
 
 ## 🛠️ Stack Tecnológico
 
-### Ecosistema Microsoft (KPIs 1–3)
+### Ecosistema Microsoft Local (KPIs 1–3)
 | Capa | Herramienta | Uso |
 |------|-------------|-----|
 | Análisis estadístico | R (tidyverse, survival, survminer) | Kaplan-Meier, regresión, visualización estadística |
@@ -34,21 +37,33 @@ Habilidades demostradas:
 | Modelado | Power BI (Power Query, DAX) | Modelo estrella, medidas, relaciones |
 | Visualización | Power BI Desktop + Visual R | Dashboard ejecutivo con visual R interactivo |
 
-### Ecosistema Google (KPI 4)
+### Ecosistema Google Cloud (KPI 4)
 | Capa | Herramienta | Uso |
 |------|-------------|-----|
 | Almacenamiento | BigQuery | Dataset IBM HR como tabla nativa |
-| Transformación | BigQuery SQL (CTEs, window functions) | Pay gap, compa-ratio |
+| Transformación | BigQuery SQL (CTEs) | Pay gap, compa-ratio |
 | Capa semántica | Vistas en BigQuery | Fuente de datos para Looker Studio |
 | Visualización | Looker Studio | Dashboard de compensación y equidad |
 
-> **Nota sobre modelado**: La lógica de negocio compleja (ratios, promedios ponderados, regresiones) se resuelve en BigQuery antes de llegar a Looker Studio — a diferencia de Power BI donde DAX permite calcularla en la capa de visualización.
+### Ecosistema Microsoft Cloud — Fabric (prueba gratuita)
+| Capa | Herramienta | Equivalente Enterprise |
+|------|-------------|----------------------|
+| Almacenamiento | OneLake + Lakehouse | Azure Data Lake Storage Gen2 |
+| Formato | Delta Lake (Parquet) | Delta Lake / Azure Synapse |
+| ETL en nube | Dataflow Gen2 | Azure Data Factory |
+| Conexión | SQL endpoint + OAuth 2.0 / Azure AD | Azure SQL DB con Entra ID |
+| Publicación | Power BI Service en Fabric | Power BI Premium / Fabric F-SKU |
+| Refresco | Scheduled Refresh automático (sin Gateway) | Refresco cloud nativo |
+
+> 📄 **Documentación detallada del laboratorio Fabric:** [`docs/azure-fabric/README.md`](docs/azure-fabric/README.md)
+
+> **Nota sobre modelado**: La lógica de negocio compleja (ratios, promedios ponderados, regresiones) se resuelve en la capa de datos antes de llegar a la visualización — en BigQuery con SQL, en Fabric con Dataflow Gen2, y en Power BI local con Power Query + DAX.
 
 ---
 
-## 📊 Dashboard Interactivo — Power BI (KPIs 1–3)
+## 📊 Dashboard Interactivo — Power BI Local (KPIs 1–3)
 
-Modelo de datos con esquema Constellation (variante del modelo estrella con múltiples tablas de hechos y Conformed Dimensions):
+Modelo de datos con esquema Constellation (múltiples tablas de hechos con Conformed Dimensions):
 
 ```
 FactEmpleados ──→ DimDepartment ←── FactTTF
@@ -66,6 +81,23 @@ FactEmpleados ──→ DimGender
 - **DAX clave**: TTF Promedio usa promedio ponderado (`SUMX(FactTTF, avg_ttf * n_vacantes) / SUM(n_vacantes)`) — no `AVERAGE` simple
 
 ![Kaplan-Meier](docs/images/Kaplan-Meier_R.png)
+
+---
+
+## ☁️ Dashboard en la Nube — Microsoft Fabric (KPIs 1–3)
+
+El mismo dashboard local fue migrado a **Microsoft Fabric** como extensión Enterprise del laboratorio. Los datos viven en OneLake, el ETL corre en la nube y el reporte se consume desde el servicio sin depender de una máquina local.
+
+**Componentes implementados:**
+- Lakehouse `people_analytics_lh` en OneLake con tabla Delta `ibm_hr_raw`
+- Dataflow Gen2 para ETL en nube (`Dataflow_PeopleAnalytics_IBM`)
+- Modelo semántico publicado con Constellation Schema (9 tablas: 4 Dims + 4 Facts + _Medidas)
+- Conexión via SQL endpoint de Fabric con autenticación OAuth 2.0 / Azure AD
+- Refresco programado diario a las 8:30 a.m. UTC-6 (sin On-premises Gateway)
+
+![Dashboard Fabric](docs/azure-fabric/screenshots/06_published_report.png)
+
+> 📄 **Ver arquitectura, tipos de conexión y screenshots:** [`docs/azure-fabric/README.md`](docs/azure-fabric/README.md)
 
 ---
 
@@ -105,7 +137,7 @@ ORDER BY df.Gender, df.JobLevel
 
 | # | KPI | Técnica | Stack | Archivo |
 |---|-----|---------|-------|---------|
-| 1 | Turnover Rate por departamento | Análisis descriptivo + semáforo de riesgo | R + Python → Power BI | `scripts/01_kpi1_turnover.R` |
+| 1 | Turnover Rate por departamento | Análisis descriptivo + semáforo de riesgo | R + Python → Power BI + Fabric | `scripts/01_kpi1_turnover.R` |
 | 2 | Time-to-Fill simulado | Simulación con benchmarks + costo por vacante | Python → Power BI (DAX ponderado) | `scripts/02_kpi2_ttf.R` |
 | 3 | Survival Analysis (retención) | Kaplan-Meier + intervalos de confianza | R (survminer) → Power BI Visual R | `scripts/03_kpi3_survival.R` |
 | 4 | Pay Equity — brecha salarial | CTEs + APPROX_QUANTILES + compa-ratio | BigQuery SQL → Looker Studio | `sql/04_kpi4_pay_equity_bigquery.sql` |
@@ -113,8 +145,6 @@ ORDER BY df.Gender, df.JobLevel
 | 6 | Diversidad e Inclusión | Pipeline D&I + attrition disparity ratio | R + Python | `scripts/06_kpi6_diversity.R` |
 | 7 | Engagement Index / eNPS proxy | Índice ponderado + segmentación Promoters/Detractors | R + Python | `scripts/07_kpi7_engagement.R` |
 | 8 | Absenteeism + Bradford Factor | Síntesis con predictores reales | R + Python | `scripts/08_kpi8_absenteeism.R` |
-
-> **KPI 4 en adelante**: se construyen en paralelo en ambos ecosistemas para demostrar portabilidad del conocimiento entre herramientas.
 
 ---
 
@@ -126,6 +156,7 @@ ORDER BY df.Gender, df.JobLevel
 - **Power BI Desktop** (para visualizar el dashboard .pbix)
 - **Cuenta Google Cloud** con BigQuery habilitado (free tier suficiente)
 - **Looker Studio** (lookerstudio.google.com — gratuito)
+- **Microsoft Fabric** (trial gratuito de 60 días en app.powerbi.com)
 
 ### Estructura del repositorio
 ```
@@ -140,7 +171,10 @@ people-analytics-lab/
 │   └── graficos/     # Imágenes PNG por KPI
 ├── dashboard/        # Archivo .pbix Power BI
 ├── docs/
-│   └── images/       # Capturas del dashboard
+│   ├── images/       # Capturas del dashboard local
+│   └── azure-fabric/ # Laboratorio Microsoft Fabric
+│       ├── README.md           ← documentación detallada
+│       └── screenshots/        ← capturas del entorno Fabric
 └── README.md
 ```
 
@@ -158,11 +192,22 @@ Rscript scripts/02_kpi2_ttf.R
 Rscript scripts/03_kpi3_survival.R
 
 # 4. Para KPI 4: ejecutar SQL en BigQuery Console
-# Archivo: 04_kpi4_pay_equity_bigquery.sql
+
+# 5. Para la capa Fabric: ver docs/azure-fabric/README.md
 ```
 
 ---
 
+## 📈 Próximos pasos
+
+- [ ] Actualizar dashboard con KPIs 4 y 5 (Pay Equity + Headcount Forecast)
+- [ ] Completar KPIs 6–8 en ecosistema Google (BigQuery + Looker Studio)
+- [ ] Implementar Row-Level Security (RLS) en modelo semántico de Fabric
+- [ ] Data Pipeline en Fabric para orquestación Bronze → Silver → Gold
+- [ ] Pay gap ajustado con **BigQuery ML** (`CREATE MODEL` + `linear_reg`)
+- [ ] Preparar para certificación **DP-600 Fabric Analytics Engineer Associate**
+
+---
 
 *Dataset: [IBM HR Analytics Employee Attrition & Performance](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset) — Kaggle*
 *Autor: Ing. Luis Alberto Ceja de León — [LinkedIn](https://www.linkedin.com/in/lceja21) | [GitHub](https://github.com/LuisCeja1286)*
